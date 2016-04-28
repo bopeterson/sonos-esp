@@ -1,7 +1,4 @@
 //Use webbrowser to configure and connect ESP8266 to wifi network
-//Inspiration was found at 
-//https://gist.github.com/dogrocker/f998dde4dbac923c47c1 and 
-//https://github.com/tzapu/WiFiManager
 //It has only been tested with Wemos D1 board (www.wemos.cc)
 
 /*

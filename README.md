@@ -24,7 +24,7 @@ To connect to an accesspoint:
 
 - Test the sonsos discover part with several sonos devices
 - Merge sonoscontrol and connecttoaccesspoint into one file
-- Add rotational encoder for volume setting
+- ~Add rotational encoder for volume setting~
 
 ## Thanks
 

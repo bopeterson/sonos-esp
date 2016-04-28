@@ -24,3 +24,12 @@ To connect to an accesspoint:
 - Test the sonsos discover part with several sonos devices
 - Merge sonoscontrol and connecttoaccesspoint into one file
 - Add rotational encoder for volume setting
+- 
+## Thanks
+
+Much help and inspiration was found here:
+
+- https://gist.github.com/dogrocker/f998dde4dbac923c47c1 - very basic connection manager that lacks some vital parts  
+- https://github.com/tzapu/WiFiManager ESP8266 WiFi Connection manager with web captive portal. Works well but I didn't want the captive portal
+- http://jpmens.net/2010/03/16/sonos-pause-switch/ A simple arduino sonos pause swich that showed me the basics
+- https://github.com/DjMomo/sonos/blob/master/sonos.class.php a nice sonos php library that I based my arduino functions on

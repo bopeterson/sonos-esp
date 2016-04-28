@@ -1,4 +1,5 @@
 # sonos-esp
+
 Basic Arduino code for connecting ESP8266 to Sonos systems.
 
 Right now there is one sketch which provides a web interface for connecting the ESP8266 to a wifi network, and one sketch that just reads the current volume of a Sonos divice. 
@@ -24,10 +25,10 @@ To connect to an accesspoint:
 - Test the sonsos discover part with several sonos devices
 - Merge sonoscontrol and connecttoaccesspoint into one file
 - Add rotational encoder for volume setting
-- 
+
 ## Thanks
 
-Much help and inspiration was found here:
+Much help and inspiration found here:
 
 - https://gist.github.com/dogrocker/f998dde4dbac923c47c1 - very basic connection manager that lacks some vital parts  
 - https://github.com/tzapu/WiFiManager ESP8266 WiFi Connection manager with web captive portal. Works well but I didn't want the captive portal

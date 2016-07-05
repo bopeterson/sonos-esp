@@ -2,9 +2,9 @@
 
 Basic Arduino code for connecting ESP8266 to Sonos systems.
 
-Right now there is one sketch which provides a web interface for connecting the ESP8266 to a wifi network, and one sketch that just reads the current volume of a Sonos divice. 
+Right now there is one sketch which provides a web interface for connecting the ESP8266 to a wifi network, and one sketch that just reads the current volume of a Sonos divice.
 
-The two sketches will be integrated into one standalone sonos control device. 
+The two sketches will be integrated into one standalone sonos control device.
 
 To connect to an accesspoint:
 
@@ -24,6 +24,7 @@ To connect to an accesspoint:
 
 - Test the sonsos discover part with several sonos devices
 - Merge sonoscontrol and connecttoaccesspoint into one file
+- Enter STA+AP for one minute after power up to enable configuration without button
 - ~~Add rotational encoder for volume setting~~
 
 ## Thanks
@@ -35,5 +36,3 @@ Much help and inspiration found here:
 - http://jpmens.net/2010/03/16/sonos-pause-switch/ A simple arduino sonos pause swich that showed me the basics
 - https://github.com/DjMomo/sonos/blob/master/sonos.class.php a nice sonos php library that I based my arduino functions on
 - https://github.com/Zepheus/esp8266-sonos-rfid Another esp8266 sonos example with code for discovering sonos devices
-
-

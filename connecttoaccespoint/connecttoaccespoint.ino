@@ -4,18 +4,18 @@
 /*
 Instructions for connecting to access point
 
-1) Connect the ESP8266 to power, and connect a pushbutton between ground and input pin D6. Internal pullup is used, no external resistor needed
-2) The ESP tries to connect to last known network. If it works, the built in led will turn off, but give a short blink every 15th second to indicate it is alive
-3) If it does not succed the ESP goes to configure state for two minutes after failed connection attempt. The ESP can also be taken to configure state at any time by pressing the button
-4) When the ESP is configure state: The built in led will start blinking 5 blinks per soecond and the ESP is now a wifi access point with SSID=configure
-5) Connect a computer to the wifi network "configure"
-6) Open a browser and go to http://192.168.4.1
-7) Enter ssid and password in webform and connect. The led blinks a  little slower
-8) A messege should appear if you succeeded or not.
-9) If you succeeded, the ESP leaves configure state and is now connected
-10) If you did not succeed you can try again
-11) If you pressed the button accidentaly, you can press it again to leave configure mode
-12) If it the ESP did not succeed in connecting to a network, the built in led will turn on, and give a short blink every  15th second
+1. Connect the ESP8266 to power, and connect a pushbutton between ground and input pin D6. Internal pullup is used, no external resistor needed
+2. The ESP tries to connect to last known network. If it works, the built in led will turn off, but give a short blink every 15th second to indicate it is alive
+3. If it does not succed the ESP goes to configure state for two minutes after failed connection attempt. The ESP can also be taken to configure state at any time by pressing the button
+4. When the ESP is configure state: The built in led will start blinking 5 blinks per soecond and the ESP is now a wifi access point with SSID=configure
+5. Connect a computer to the wifi network "configure"
+6. Open a browser and go to http://192.168.4.1
+7. Enter ssid and password in webform and connect. The led blinks a  little slower
+8. A messege should appear if you succeeded or not.
+9. If you succeeded, the ESP leaves configure state and is now connected
+10. If you did not succeed you can try again
+11. If you pressed the button accidentaly, you can press it again to leave configure mode
+12. If it the ESP did not succeed in connecting to a network, the built in led will turn on, and give a short blink every  15th second
 
 LED indication:
 - OFF with short blink every 15th second: connected

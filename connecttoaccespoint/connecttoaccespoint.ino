@@ -20,7 +20,7 @@ Instructions for connecting to access point
 LED indication:
 - OFF with short blink every 15th second: connected
 - ON  with short blink every 15th second: not connected
-- Blinking 5 blinks per second: ESP in configuration mode. Networks ssid and password can be configured through web browser
+- Blinking 5 blinks per second: ESP in configuration mode. Network ssid and password can be configured through web browser
 - Blinking a little slower: ESP is trying to connect
 */
 

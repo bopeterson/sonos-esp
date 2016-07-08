@@ -1,5 +1,8 @@
 #include "WiFiSetup.h"
 
+const char compiletime[] = __TIME__;
+const char compiledate[] = __DATE__;
+
 WiFiSetup wifisetup(BUILTIN_LED); // Wemos blue led; -1 if not using led
 
 const unsigned long checkRate = 15*1000; //how often main loop performs periodical task
@@ -12,6 +15,11 @@ void setup() {
 
   Serial.begin(9600);
   Serial.println("");
+  Serial.print("Compile time and date: ");
+  Serial.print(compiletime);
+  Serial.print(" ");
+  Serial.println(compiledate);
+
   wifisetup.start();
   //wifisetup.startAccessPoint(0);
 

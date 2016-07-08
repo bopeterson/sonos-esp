@@ -94,6 +94,7 @@ class WiFiSetup {
     static bool accessPointStarted;
     static bool tryingToConnect;
 
+    static char html[WFS_MAXHTMLLENGTH];
     const static char htmlstart[];
     const static char htmlmid[];
     const static char htmlend[];

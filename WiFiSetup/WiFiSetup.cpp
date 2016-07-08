@@ -10,37 +10,40 @@ bool WiFiSetup::webServerRunning=false;
 bool WiFiSetup::accessPointStarted=false;
 bool WiFiSetup::tryingToConnect=false;
 
-char WiFiSetup::html[]="";
-char WiFiSetup::htmlstart[] = "<!doctype html>\r\n<html><head><meta charset='UTF-8'><title>Connect</title></head><body onload=\"";
-char WiFiSetup::htmlmid[] = "\">";
-char WiFiSetup::htmlend[] = "</body></html>";
+
+const char WiFiSetup::htmlstart[] = "<!doctype html>\r\n<html><head><meta charset='UTF-8'><title>Connect</title></head><body onload=\"";
+const char WiFiSetup::htmlmid[] = "\">";
+const char WiFiSetup::htmlend[] = "</body></html>";
 
 String WiFiSetup::networks;
 
-char WiFiSetup::WiFiSSID[MAXSSIDLENGTH];
-char WiFiSetup::WiFiPSK[MAXPASSKEYLENGTH];
+char WiFiSetup::WiFiSSID[WFS_MAXSSIDLENGTH];
+char WiFiSetup::WiFiPSK[WFS_MAXPASSKEYLENGTH];
 
 WiFiMode WiFiSetup::wifimode;
 byte WiFiSetup::ledStatus;
 
+const byte WiFiSetup::ON = LOW;
+const byte WiFiSetup::OFF = HIGH;
+
 unsigned long WiFiSetup::timeToChangeToSTA = 0; //when is it time time to change to STA (station) in ms. Zero means never
 
+int WiFiSetup::_led_pin;
 
-WiFiSetup::WiFiSetup() {
+WiFiSetup::WiFiSetup(int led_pin) {
+    //set led_pin to -1 if led should not be used to signal status
     //do som init stuff
     if (WFS_DEBUG) {
       Serial.begin(9600);
     }
    
-    tempssid[MAXSSIDLENGTH] = '\0';
 
-    strcpy(htmlstart,"<!doctype html>\r\n<html><head><meta charset='UTF-8'><title>Connect</title></head><body onload=\"");
-    strcpy(htmlmid,"\">");
-    strcpy(htmlend,"</body></html>");
-
-    pinMode(LED_PIN, OUTPUT);
+    _led_pin=led_pin;
+    if (_led_pin != -1) {
+      pinMode(_led_pin, OUTPUT);
+    }
     ledStatus = ON;
-    digitalWrite(LED_PIN, ledStatus);
+    ledWrite(ledStatus);
 
 }
 
@@ -53,13 +56,13 @@ void WiFiSetup::start() {
     wfs_debugprint("WL_CONNECTED to ");
     wfs_debugprintln(WiFi.SSID());
     ledStatus = OFF;
-    digitalWrite(LED_PIN, ledStatus);
+    ledWrite(ledStatus);
   } else {
     wfs_debugprintln("NOT WL_CONNECTED to ");
     wfs_debugprintln(WiFi.SSID());
  
     ledStatus = ON;
-    digitalWrite(LED_PIN, ledStatus);
+    ledWrite(ledStatus);
     startAccessPoint(2*60000); //start accesspoint for two minutes if it could not connect
   }
 
@@ -73,8 +76,9 @@ void WiFiSetup::handleStatus() {
   //3) this page is called during connection-but this is usually not handled
   //4) this page is called before connection attemp-redirect to form
 
-  char onload[MAXONLOADLENGTH];
-  char body[MAXBODYLENGTH];
+  char onload[WFS_MAXONLOADLENGTH];
+  char body[WFS_MAXBODYLENGTH];
+  char html[WFS_MAXHTMLLENGTH];
 
   sprintf(onload,""); //not used now, keep for potential future use
   if (showSuccessOnWeb) {
@@ -94,15 +98,16 @@ void WiFiSetup::handleStatus() {
 
 void WiFiSetup::handleRoot() {
   wfs_debugprintln("handleroot");
-  char onload[MAXONLOADLENGTH];
-  char networkch[MAXNETWORKCHLENGTH]; 
-  char body[MAXBODYLENGTH];
+  char onload[WFS_MAXONLOADLENGTH];
+  char networkch[WFS_MAXNETWORKCHLENGTH]; 
+  char body[WFS_MAXBODYLENGTH];
+  char html[WFS_MAXHTMLLENGTH];
 
   sprintf(onload,"");
 
   bool initiateConnection=false;
   if (!server.hasArg("ssid") && WiFi.status() != WL_CONNECTED) {
-    networks.toCharArray(networkch,MAXNETWORKCHLENGTH);
+    networks.toCharArray(networkch,WFS_MAXNETWORKCHLENGTH);
     //note that html element arguments may be double qouted, single quoted or unquoted. Unquoted is usually not recommended but used here to save memory
     sprintf(body, "<p>Not connected</p><form method=post action='/'><input type=text name=ssid value='%s' size=32 id=s1 onchange='document.getElementById(\"s2\").value=this.value'> SSID (network name)<br><select name=s2 id=s2 onchange='document.getElementById(\"s1\").value=this.value'>%s</select><br><input type=password name=pass size=32> PASSWORD<br><input type=submit value=connect></form>", WiFiSSID,networkch);
   } else if (!server.hasArg("ssid")) {
@@ -111,10 +116,10 @@ void WiFiSetup::handleRoot() {
     showFailureOnWeb = false;
     showSuccessOnWeb = false;
     initiateConnection = true;
-    server.arg("ssid").toCharArray(WiFiSSID, MAXSSIDLENGTH);
+    server.arg("ssid").toCharArray(WiFiSSID, WFS_MAXSSIDLENGTH);
     wfs_debugprintln("has arg ssid");
     if (server.hasArg("pass")) {
-      server.arg("pass").toCharArray(WiFiPSK, MAXPASSKEYLENGTH);
+      server.arg("pass").toCharArray(WiFiPSK, WFS_MAXPASSKEYLENGTH);
     } else {
       sprintf(WiFiPSK,"");
     }
@@ -132,11 +137,11 @@ void WiFiSetup::handleRoot() {
       wfs_debugprintln("Connection successful");
       showSuccessOnWeb = true;
       ledStatus = OFF;
-      digitalWrite(LED_PIN, ledStatus);
+      ledWrite(ledStatus);
     } else { 
       wfs_debugprintln("Connection failed");
       ledStatus = ON;
-      digitalWrite(LED_PIN, ledStatus);
+      ledWrite(ledStatus);
       startAccessPoint(0);
       showFailureOnWeb = true;
     }
@@ -175,7 +180,7 @@ bool WiFiSetup::connectWiFi() {
       wfs_debugprint(".");
       // Blink the LED
       ledStatus = !ledStatus;
-      digitalWrite(LED_PIN, ledStatus); // Write LED high/low 
+      ledWrite(ledStatus); // Write LED high/low 
       //server.handleClient(); //99% sure this line makes it crash some times. uncomment at your own risk if you wan to handle web requests while ESP is trying to connect to network :)
     }
     delay(delayTime); //a delay is needed when connecting and doing other stuff, otherwise it will crash
@@ -208,7 +213,7 @@ void WiFiSetup::startAccessPoint(unsigned long activeTime) {
   wfs_debugprintln("scanning complete");
   if (n>0) {
     for (int i = 0; i < n; ++i) {
-      if (networks.length()+17+WiFi.SSID(i).length()<MAXNETWORKCHLENGTH) {
+      if (networks.length()+17+WiFi.SSID(i).length()<WFS_MAXNETWORKCHLENGTH) {
         //if more networks than what fits in networksch char array are found, skip them
         networks=networks+"<option>"+WiFi.SSID(i)+"</option>";
       }
@@ -225,12 +230,12 @@ void WiFiSetup::startAccessPoint(unsigned long activeTime) {
     IPAddress stationip(192, 168, 4, 1);//this is the default but added manually just to be sure it doesn't change in the future
     IPAddress NMask(255, 255, 255, 0);
     WiFi.softAPConfig(stationip, stationip, NMask);    
-    WiFi.softAP(APSSID);
+    WiFi.softAP("configure");
     IPAddress apip = WiFi.softAPIP();
     wfs_debugprint("Starting access point mode with IP address ");
     wfs_debugprintln(apip);
     wfs_debugprint("Connect to ");
-    wfs_debugprint(APSSID);
+    wfs_debugprint("configure");
     wfs_debugprint(" network and browse to ");
     wfs_debugprintln(apip);
     accessPointStarted = true;
@@ -255,14 +260,14 @@ void WiFiSetup::startWebServer() {
 
 void WiFiSetup::shortBlink() {
   ledStatus = !ledStatus;
-  digitalWrite(LED_PIN, ledStatus);
+  ledWrite(ledStatus);
   if (ledStatus == OFF) {
     delay(30); //longer pulse needed when going ON-OFF-ON
   } else {
     delay(5);
   }
   ledStatus = !ledStatus;
-  digitalWrite(LED_PIN, ledStatus);
+  ledWrite(ledStatus);
 }
 
 void WiFiSetup::handleClient() {
@@ -382,18 +387,19 @@ void WiFiSetup::periodic() {
     lastCheck=loopStart;
     if (WiFi.status() == WL_CONNECTED) {
       ledStatus = OFF;
-      digitalWrite(LED_PIN, ledStatus);
+      ledWrite(ledStatus);
     } else {
       ledStatus = ON;
-      digitalWrite(LED_PIN, ledStatus);
+      ledWrite(ledStatus);
     }
+    shortBlink();
   }
 
   if ((wifimode == WIFI_AP) && (lastApBlink + apBlinkRate <= loopStart)) {
     //blink led to indicate access point mode
     lastApBlink = loopStart;
     ledStatus = !ledStatus;
-    digitalWrite(LED_PIN, ledStatus);
+    ledWrite(ledStatus);
   }
   
 }
@@ -404,5 +410,12 @@ void WiFiSetup::toggleAccessPoint() {
     } else {
       timeToChangeToSTA = millis();
     }  
+}
+
+
+void WiFiSetup::ledWrite(int status) {
+  if (_led_pin != -1) {
+    digitalWrite(_led_pin, status);
+  }
 }
 

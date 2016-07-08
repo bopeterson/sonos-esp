@@ -1,15 +1,6 @@
-/*
-Nu har jag fungerande library som har det mesta utom:
--välja vilken led och ev inte alls i constructor
--några konstanter som borde bli variabler 
--sök efter xxx
--ev shortblink
--uppdatera dokumentation
-*/
-
 #include "WiFiSetup.h"
 
-WiFiSetup wifisetup;
+WiFiSetup wifisetup(BUILTIN_LED); // Wemos blue led; -1 if not using led
 
 const unsigned long checkRate = 15*1000; //how often main loop performs periodical task
 unsigned long lastPost = 0;

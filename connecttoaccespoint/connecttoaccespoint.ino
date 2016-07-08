@@ -208,13 +208,13 @@ void loop() {
     if (connectWiFi()) {
       debugprintln("Connection successful");
       showSuccessOnWeb = true;
-      ledStatus = ON;
+      ledStatus = OFF;
       digitalWrite(LED_PIN, ledStatus);
     } else { 
       debugprintln("Connection failed");
       runAccessPoint = true;
       showFailureOnWeb = true;
-      ledStatus = OFF;
+      ledStatus = ON;
       digitalWrite(LED_PIN, ledStatus);
     }
   }

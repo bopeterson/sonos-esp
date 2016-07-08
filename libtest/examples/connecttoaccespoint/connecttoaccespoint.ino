@@ -452,12 +452,8 @@ void startAccessPoint(unsigned long activeTime) {
       }
     }
   }
-  if (activeTime==0) {
-    timeToChangeToSTA = 0;
-  } else {
-    timeToChangeToSTA = millis()+activeTime;  
-  }
   
+  timeToChangeToSTA = activeTime;
   if (!accessPointStarted) {
     IPAddress stationip(192, 168, 4, 1);//this is the default but added manually just to be sure it doesn't change in the future
     IPAddress NMask(255, 255, 255, 0);

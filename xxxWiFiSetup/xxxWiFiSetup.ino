@@ -1,0 +1,87 @@
+/*
+Nu har jag fungerande library som har det mesta utom:
+-välja vilken led och ev inte alls i constructor
+-några konstanter som borde bli variabler 
+-sök efter xxx
+-ev shortblink
+-uppdatera dokumentation
+*/
+
+#include "WiFiSetup.h"
+
+WiFiSetup wifisetup;
+
+const unsigned long checkRate = 15*1000; //how often main loop performs periodical task
+unsigned long lastPost = 0;
+
+const int INPUT_PIN = D6; // Digital pin to be read
+
+void setup() {
+  pinMode(INPUT_PIN, INPUT_PULLUP);
+
+  Serial.begin(9600);
+  Serial.println("");
+  wifisetup.start();
+  //wifisetup.startAccessPoint(0);
+
+  lastPost = millis() - checkRate;
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+  unsigned long loopStart = millis();
+
+  unsigned long t1=micros();
+  wifisetup.periodic();
+  unsigned long t2=micros();
+
+  //check button
+  //button toggles between station and accesspoint
+  if (readConfigureButton()) {
+    Serial.println("BUTTON PRESSED");
+    wifisetup.toggleAccessPoint();
+  }
+  
+  if (lastPost + checkRate <= loopStart) {
+    lastPost = loopStart;
+    //put any code here that should run periodically
+
+
+    //show wifi-status. OFF = connected, ON = disconnected
+
+    wifisetup.printInfo();
+
+    Serial.print("t2-t1=");
+    Serial.println(t2-t1);
+  }
+
+
+}
+
+//global variables needed for readConfigureButton
+//INPUT_PIN defined earlier
+int buttonState = HIGH;             // the current reading from the input pin
+unsigned long lastDebounceTime = 0;  // the last time the output pin was toggled
+int lastButtonState = HIGH;   // the previous reading from the input pin
+bool readConfigureButton() {
+  //button connected to pullup and ground, ie LOW=PRESSED
+  unsigned long debounceDelay = 50;
+  int reading = digitalRead(INPUT_PIN);
+  int pressDetected=false;
+  if (reading != lastButtonState) {
+    // reset the debouncing timer
+    lastDebounceTime = millis();
+  }
+
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    if (reading != buttonState) {
+      buttonState = reading;
+      if (buttonState == LOW) {
+        pressDetected=true;
+      }
+    }
+  }
+  lastButtonState = reading;  
+  return pressDetected;
+}
+

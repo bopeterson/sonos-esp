@@ -103,12 +103,9 @@ void WiFiSetup::handleRoot() {
 
   bool initiateConnection=false;
   if (!server.hasArg("ssid") && WiFi.status() != WL_CONNECTED) {
-    Serial.println("xxxxxxxxxx");
-    Serial.println(networks);
     networks.toCharArray(networkch,WFS_MAXNETWORKCHLENGTH);
     //note that html element arguments may be double qouted, single quoted or unquoted. Unquoted is usually not recommended but used here to save memory
     sprintf(body, "<p>Not connected</p><form method=post action='/'><input type=text name=ssid value='%s' size=32 id=s1 onchange='document.getElementById(\"s2\").value=this.value'> SSID (network name)<br><select name=s2 id=s2 onchange='document.getElementById(\"s1\").value=this.value'>%s</select><br><input type=password name=pass size=32> PASSWORD<br><input type=submit value=connect></form>", WiFiSSID,networkch);
-    //Serial.println(body);
   } else if (!server.hasArg("ssid")) {
     networks.toCharArray(networkch,WFS_MAXNETWORKCHLENGTH);
     sprintf(body,"<p>Connected to %s</p><form method=post action='/'><input type=text name=ssid value='%s' size=32 id=s1 onchange='document.getElementById(\"s2\").value=this.value'> SSID (network name)<br><select name=s2 id=s2 onchange='document.getElementById(\"s1\").value=this.value'>%s</select><br><input type=password name=pass size=32> PASSWORD<br><input type=submit value=connect></form>",WiFiSSID,WiFiSSID,networkch);
@@ -128,16 +125,8 @@ void WiFiSetup::handleRoot() {
   }
 
   //Don't change the content on any of these variables without checking their size limits!
-  Serial.println("========");
-  //Serial.println(htmlstart);
-  //Serial.println(onload);
-  //Serial.println(htmlmid);
-  //Serial.println(body);
-  //Serial.println(htmlend);
   sprintf(html, "%s%s%s%s%s", htmlstart, onload, htmlmid, body, htmlend);
-  //Serial.println(html);
   server.send(200, "text/html", html);
-  Serial.println("xxxyyyzzz");
   if (initiateConnection) {
     if (connectWiFi()) {
       wfs_debugprintln("Connection successful");

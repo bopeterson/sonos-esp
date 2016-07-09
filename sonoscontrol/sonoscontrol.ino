@@ -143,7 +143,7 @@ void loop() {
 
 
 
-void pause(IPAddress device) { //xxx hellre pause(device)
+void pause(IPAddress device) {
   const char url[] = "/AVTransport/Control";
   const char service[] = "AVTransport:1";
   const char action[] = "Pause";

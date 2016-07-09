@@ -1,11 +1,13 @@
-#include "SonosEsp.h"
+#include <SimpleButton.h>
+#include <SonosEsp.h>
+#include <WiFiSetup.h>
 
 const char compiletime[]=__TIME__;
 const char compiledate[]=__DATE__;
 
 SonosEsp sonos;
 
-
+SimpleButton knobButton(D6);
 
 //encoder variables
 const int pinA = D3;  // Connected to CLK on KY-040
@@ -77,18 +79,14 @@ void loop() {
     encoderRelativeCount=0;
   }
 
-  String state=sonos.getTransportInfo(0);
-  Serial.print("state: ");
-  Serial.println(state);
-  if (state=="PLAYING") {
-    Serial.println("sonos is playing");
-  } else if (state=="PAUSED_PLAYBACK") {
-    Serial.println("sonos is paused");
-  } else if (state=="STOPPED") {
-    Serial.println("sonos is stopped");
+  if (knobButton.readButton()) {
+    Serial.println("button pressed");
+    if (sonos.getTransportInfo(0)=="PLAYING") {
+      sonos.pause(0);
+    } else {
+      sonos.play(0);
+    }
   }
-  
-  delay(3000);
 
 
 }

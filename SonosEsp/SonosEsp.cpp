@@ -14,6 +14,15 @@ void SonosEsp::pause(int device) {
   sonosAction(url,service,action,arguments,device);
 }
 
+void SonosEsp::play(int device) {
+  const char url[] = "/AVTransport/Control";
+  const char service[] = "AVTransport:1";
+  const char action[] = "Play";
+  const char arguments[] = "<InstanceID>0</InstanceID><Speed>1</Speed>";
+  sonosAction(url,service,action,arguments,device);
+}
+
+
 byte SonosEsp::getVolume(int device) {
   const char url[] = "/RenderingControl/Control";
   const char service[] = "RenderingControl:1";
@@ -23,6 +32,19 @@ byte SonosEsp::getVolume(int device) {
   filter("<CurrentVolume>","</CurrentVolume>");
   return string2int(_filtered);
 }
+
+String SonosEsp::getTransportInfo(int device) {
+ //returns STOPPED, PLAYING or PAUSED_PLAYBACK
+  const char url[] = "/AVTransport/Control";
+  const char service[] = "AVTransport:1";
+  const char action[] = "GetTransportInfo";
+  const char arguments[] = "<InstanceID>0</InstanceID>";
+  sonosAction(url,service,action,arguments,device);
+  filter("<CurrentTransportState>","</CurrentTransportState>");
+  return String(_filtered);
+}
+
+
 
 void SonosEsp::removeAllTracksFromQueue(int device) { 
   const char url[] = "/AVTransport/Control";

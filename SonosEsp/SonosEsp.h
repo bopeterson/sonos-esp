@@ -14,8 +14,10 @@ class SonosEsp {
     SonosEsp();
     void removeAllTracksFromQueue(int device); 
     void pause(int device);
+    void play(int device);
     byte getVolume(int device);
     void setVolume(byte vol,int device);
+    String getTransportInfo(int device);
     int discoverSonos();
     int getNumberOfDevices();
 

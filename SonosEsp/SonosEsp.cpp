@@ -2,8 +2,7 @@
 #include "SonosEsp.h"
 
 SonosEsp::SonosEsp() {
-  //nothong here yet...
-  
+  _numberOfDevices=0;
 }
 
 void SonosEsp::pause(int device) {

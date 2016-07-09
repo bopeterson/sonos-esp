@@ -67,6 +67,7 @@ class WiFiSetup {
     void start();
     void handleClient();
     void printInfo();
+    bool connected();
 
     void periodic();
 

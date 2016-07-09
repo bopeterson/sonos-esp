@@ -5,9 +5,15 @@
 const char compiletime[]=__TIME__;
 const char compiledate[]=__DATE__;
 
+WiFiSetup wifisetup(BUILTIN_LED); // Wemos blue led; -1 if not using led
+
 SonosEsp sonos;
 
+
 SimpleButton knobButton(D6);
+
+const unsigned long checkRate = 15*1000; //how often main loop performs periodical task
+unsigned long lastPost = 0;
 
 //encoder variables
 const int pinA = D3;  // Connected to CLK on KY-040
@@ -17,6 +23,8 @@ int pinALast;
 int aVal;
 int encoderRelativeCount;
 unsigned long moveTime;
+
+
 
 void setup() {
   Serial.begin(9600);
@@ -31,18 +39,33 @@ void setup() {
   pinMode (pinB, INPUT);
   pinALast = digitalRead(pinA);
 
-  //connectWiFi();
-  delay(7000); //wait for connection to wifi 
-  
-  sonos.discoverSonos();
-  
-  Serial.print("Found devices: ");
-  Serial.println(sonos.getNumberOfDevices());
+  //wifisetup.start();
+  wifisetup.startAccessPoint(0);
 
+  //connectWiFi();
+  //delay(7000); //wait for connection to wifi 
+  if (wifisetup.connected()) {
+    sonos.discoverSonos();
+    Serial.print("Found devices: ");
+    Serial.println(sonos.getNumberOfDevices());
+  }
 
 }
 
 void loop() {
+  unsigned long loopStart = millis();
+
+  wifisetup.periodic();
+
+  if (lastPost + checkRate <= loopStart) {
+    lastPost = loopStart;
+    //put any code here that should run periodically
+    if (sonos.getNumberOfDevices()==0 && wifisetup.connected()) {
+      sonos.discoverSonos();
+      Serial.print("Found devices: ");
+      Serial.println(sonos.getNumberOfDevices());
+    }
+  }  
 
   //read knob
   aVal = digitalRead(pinA);

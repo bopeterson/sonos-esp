@@ -47,6 +47,10 @@ WiFiSetup::WiFiSetup(int led_pin) {
 
 }
 
+bool WiFiSetup::connected() {
+  return (WiFi.status() == WL_CONNECTED);
+}
+
 void WiFiSetup::start() {
   //start in station mode and try to connect to last known ssid
   wifimode = WIFI_STA;

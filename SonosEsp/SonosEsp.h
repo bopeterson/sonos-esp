@@ -20,7 +20,7 @@ class SonosEsp {
     String getTransportInfo(int device);
     int discoverSonos();
     int getNumberOfDevices();
-
+    IPAddress getIpOfDevice(int device);
 
   private:
     char _response[SNSESP_BUFSIZ];

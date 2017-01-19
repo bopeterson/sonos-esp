@@ -36,7 +36,6 @@ WiFiSetup::WiFiSetup(int led_pin) {
     if (WFS_DEBUG) {
       Serial.begin(9600);
     }
-   
 
     _led_pin=led_pin;
     if (_led_pin != -1) {
@@ -44,7 +43,6 @@ WiFiSetup::WiFiSetup(int led_pin) {
     }
     ledStatus = ON;
     ledWrite(ledStatus);
-
 }
 
 bool WiFiSetup::connected() {
@@ -245,7 +243,6 @@ void WiFiSetup::startAccessPoint(unsigned long activeTime) {
   }
 }
 
-
 void WiFiSetup::startWebServer() {
 
   wfs_debugprintln("Starting webserver");
@@ -334,6 +331,7 @@ void WiFiSetup::printInfo() {
   wfs_debugprint(F("AP IP Address:       "));
   wfs_debugprintln(ip);
   wfs_debugprint("WIFI MODE:           ");
+  
   if (wifimode==WIFI_STA) {
     wfs_debugprintln(F("WIFI_STA"));
   } else if (wifimode==WIFI_AP) {
@@ -404,6 +402,7 @@ void WiFiSetup::periodic() {
 }
 
 void WiFiSetup::toggleAccessPoint() {
+
   if (wifimode == WIFI_STA) {
       startAccessPoint(0);
     } else {

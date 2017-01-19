@@ -10,12 +10,10 @@
  * 
  */
 
+
 #include <SimpleButton.h>
 #include <SonosEsp.h>
 #include <WiFiSetup.h>
-
-
-int device=0;
 
 const char compiletime[]=__TIME__;
 const char compiledate[]=__DATE__;
@@ -40,7 +38,7 @@ unsigned long moveTime;
 
 void setup() {
   knobButton.begin(D6);
-  Serial.begin(9600); 
+  Serial.begin(9600);
   Serial.println("");
   Serial.print("compiletime: ");
   Serial.print(compiletime);
@@ -53,7 +51,7 @@ void setup() {
   pinALast = digitalRead(pinA);
 
   //wifisetup.start();
-  wifisetup.startAccessPoint(30000);
+  wifisetup.startAccessPoint(10);
 
   //connectWiFi();
   //delay(7000); //wait for connection to wifi 
@@ -61,12 +59,6 @@ void setup() {
     sonos.discoverSonos();
     Serial.print("Found devices: ");
     Serial.println(sonos.getNumberOfDevices());
-    for (int i=0;i<sonos.getNumberOfDevices();i++) {
-      Serial.print("Device ");
-      Serial.print(i);
-      Serial.print(": ");
-      Serial.println(sonos.getIpOfDevice(i));
-    }
   }
 
 }
@@ -83,18 +75,6 @@ void loop() {
       sonos.discoverSonos();
       Serial.print("Found devices: ");
       Serial.println(sonos.getNumberOfDevices());
-      for (int i=0;i<sonos.getNumberOfDevices();i++) {
-        Serial.print("Device ");
-        Serial.print(i);
-        Serial.print(": ");
-        Serial.println(sonos.getIpOfDevice(i));
-        Serial.println("==========");
-        sonos.deviceInfo(i);
-        Serial.println("");
-        Serial.println("==========");
-      }
-
-    
     }
   }  
 
@@ -119,28 +99,29 @@ void loop() {
   pinALast = aVal;
 
   if (millis()>moveTime && moveTime!=0) {
-    int oldVolume=sonos.getVolume(device);
+    int oldVolume=sonos.getVolume(0);
+    Serial.print("old volume; ");
+    Serial.print(oldVolume);
     //xxx handle timeout in getVolume
-    int newVolume=oldVolume+floor(2*0.5*(encoderRelativeCount+0.5));
+    int newVolume=oldVolume+floor(0.5*(encoderRelativeCount+0.5));
     newVolume=constrain(newVolume,0,100);
-
-    Serial.print("Volume:         ");
-    Serial.println(newVolume);
-    Serial.print("Volume change;  ");
-    Serial.println(newVolume-oldVolume);
-    Serial.print("Encoder change: ");
+    Serial.print(", new volume: ");
+    Serial.print(newVolume);
+    Serial.print(" , encoder position: ");
+    Serial.print(encoderPosCount);
+    Serial.print(" , encoder move: ");
     Serial.println(encoderRelativeCount);
-    sonos.setVolume(newVolume,device);
+    sonos.setVolume(newVolume,0);
     moveTime=0; 
     encoderRelativeCount=0;
   }
 
   if (knobButton.readButton()) {
     Serial.println("button pressed");
-    if (sonos.getTransportInfo(device)=="PLAYING") {
-      sonos.pause(device);
+    if (sonos.getTransportInfo(0)=="PLAYING") {
+      sonos.pause(0);
     } else {
-      sonos.play(device);
+      sonos.play(0);
     }
   }
 

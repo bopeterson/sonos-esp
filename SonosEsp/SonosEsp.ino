@@ -77,6 +77,7 @@ void loop() {
     encoderRelativeCount=0;
   }
 
+/*
   String state=sonos.getTransportInfo(0);
   Serial.print("state: ");
   Serial.println(state);
@@ -87,9 +88,8 @@ void loop() {
   } else if (state=="STOPPED") {
     Serial.println("sonos is stopped");
   }
-  
   delay(3000);
-
+*/
 
 }
 

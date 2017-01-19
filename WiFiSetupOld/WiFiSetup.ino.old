@@ -3,7 +3,8 @@
 const char compiletime[] = __TIME__;
 const char compiledate[] = __DATE__;
 
-WiFiSetup wifisetup(BUILTIN_LED); // Wemos blue led; -1 if not using led
+//WiFiSetup wifisetup(BUILTIN_LED); // Wemos blue led; -1 if not using led
+WiFiSetup wifisetup(-1); // Wemos blue led; -1 if not using led
 
 const unsigned long checkRate = 15*1000; //how often main loop performs periodical task
 unsigned long lastPost = 0;
@@ -20,8 +21,8 @@ void setup() {
   Serial.print(" ");
   Serial.println(compiledate);
 
-  wifisetup.start();
-  //wifisetup.startAccessPoint(0);
+  //wifisetup.start();
+  wifisetup.startAccessPoint(60000);
 
   lastPost = millis() - checkRate;
 }

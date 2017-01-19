@@ -230,6 +230,10 @@ bool SonosEsp::addIp(IPAddress ip) {
   return added;
 }
 
+//IPAddress getIpOfDevice(int device) {
+//  return _deviceIPs[device];
+//}
+
 int SonosEsp::getNumberOfDevices() {
   return _numberOfDevices;
 }

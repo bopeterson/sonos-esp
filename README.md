@@ -4,7 +4,7 @@ Basic Arduino code for connecting ESP8266 to Sonos systems.
 
 Right now there is one sketch which provides a web interface for connecting the ESP8266 to a wifi network, and one sketch that just reads the current volume of a Sonos divice.
 
-The two sketches will be integrated into one standalone sonos control device.
+This project has evolved into  <https://github.com/bopeterson/WemosSonos> and <https://github.com/bopeterson/WemosSetup>
 
 ## Instructions for connecting to access point
 
